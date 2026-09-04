@@ -1,0 +1,202 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Rent vs. Buy Calgary</title>
+  </head>
+  <body>
+    <div id="app">
+      <header class="app-header">
+        <h1>Rent vs. Buy — Calgary, Alberta</h1>
+        <p class="subtitle">
+          Compares building home equity against investing what you'd otherwise spend, using
+          Alberta-specific costs and rules. Every field updates the results instantly.
+        </p>
+      </header>
+
+      <main class="layout">
+        <form id="inputs-form" class="inputs-panel">
+          <fieldset>
+            <legend>House &amp; Purchase</legend>
+
+            <label class="field">
+              <span>Property type</span>
+              <select name="propertyType">
+                <option value="house">House</option>
+                <option value="condo">Condo</option>
+              </select>
+            </label>
+
+            <label class="field">
+              <span>Home price</span>
+              <input type="number" name="homePrice" min="0" step="1000" />
+            </label>
+
+            <div class="field-pair">
+              <label class="field">
+                <span>Down payment (%)</span>
+                <input type="number" name="downPaymentPct" min="0" max="100" step="0.5" />
+              </label>
+              <label class="field">
+                <span>Down payment ($)</span>
+                <input type="number" name="downPaymentAmount" min="0" step="1000" />
+              </label>
+            </div>
+            <p class="hint" id="min-down-hint"></p>
+          </fieldset>
+
+          <fieldset>
+            <legend>Financing &amp; Alberta Closing Costs</legend>
+
+            <label class="field">
+              <span>Mortgage interest rate (%)</span>
+              <input type="number" name="mortgageRatePct" min="0" max="25" step="0.05" />
+            </label>
+
+            <label class="field">
+              <span>Amortization (years)</span>
+              <input type="number" name="amortizationYears" min="1" max="35" step="1" />
+            </label>
+
+            <label class="field">
+              <span>Legal fees ($)</span>
+              <input type="number" name="legalFees" min="0" step="50" />
+            </label>
+
+            <label class="field">
+              <span>Home inspection ($)</span>
+              <input type="number" name="homeInspection" min="0" step="50" />
+            </label>
+
+            <label class="field">
+              <span>Appraisal fee ($)</span>
+              <input type="number" name="appraisalFee" min="0" step="50" />
+            </label>
+
+            <label class="field">
+              <span>Title insurance ($, optional)</span>
+              <input type="number" name="titleInsurance" min="0" step="50" />
+            </label>
+
+            <div class="computed-row">
+              <span>Land title registration fee (AB)</span>
+              <strong id="out-land-title-fee">—</strong>
+            </div>
+            <div class="computed-row">
+              <span>Mortgage registration fee (AB)</span>
+              <strong id="out-mortgage-reg-fee">—</strong>
+            </div>
+            <div class="computed-row">
+              <span>CMHC insurance premium <small id="out-cmhc-tier"></small></span>
+              <strong id="out-cmhc-premium">—</strong>
+            </div>
+          </fieldset>
+
+          <fieldset>
+            <legend>Ownership Costs</legend>
+
+            <label class="field">
+              <span>Property tax rate (%/yr of value)</span>
+              <input type="number" name="propertyTaxPct" min="0" max="5" step="0.01" />
+            </label>
+
+            <label class="field" id="field-home-insurance">
+              <span>Home insurance ($/yr)</span>
+              <input type="number" name="homeInsuranceAnnual" min="0" step="50" />
+            </label>
+
+            <label class="field" id="field-condo-insurance" hidden>
+              <span>Condo insurance ($/yr)</span>
+              <input type="number" name="homeInsuranceAnnualCondo" min="0" step="50" />
+            </label>
+
+            <label class="field" id="field-condo-fee" hidden>
+              <span>Condo fee ($/month)</span>
+              <input type="number" name="condoFeeMonthly" min="0" step="10" />
+            </label>
+
+            <label class="field">
+              <span>Maintenance (%/yr of value)</span>
+              <input type="number" name="maintenancePct" min="0" max="10" step="0.1" />
+            </label>
+          </fieldset>
+
+          <fieldset>
+            <legend>Sale Assumptions</legend>
+
+            <label class="field">
+              <span>Years you'll own before selling</span>
+              <input type="number" name="yearsToOwn" min="1" max="35" step="1" />
+            </label>
+
+            <label class="field">
+              <span>Home appreciation (%/yr)</span>
+              <input type="number" name="appreciationPct" min="-10" max="20" step="0.1" />
+            </label>
+
+            <label class="field">
+              <span>Selling commission override (%, optional)</span>
+              <input type="number" name="commissionOverridePct" min="0" max="10" step="0.1" placeholder="auto (7%/3% + GST)" />
+            </label>
+            <div class="computed-row">
+              <span>Estimated selling commission at sale</span>
+              <strong id="out-selling-commission">—</strong>
+            </div>
+          </fieldset>
+
+          <fieldset>
+            <legend>Rent &amp; Investment Assumptions</legend>
+
+            <label class="field">
+              <span>Monthly rent ($)</span>
+              <input type="number" name="monthlyRent" min="0" step="50" />
+            </label>
+
+            <label class="field">
+              <span>Annual rent increase (%)</span>
+              <input type="number" name="rentIncreasePct" min="0" max="20" step="0.1" />
+            </label>
+
+            <label class="field">
+              <span>Renter's insurance ($/yr)</span>
+              <input type="number" name="rentersInsuranceAnnual" min="0" step="25" />
+            </label>
+
+            <label class="field">
+              <span>Investment return (%/yr, index fund)</span>
+              <input type="number" name="investmentReturnPct" min="-10" max="20" step="0.1" />
+            </label>
+            <p class="hint">Historical long-run average, not a guarantee — past returns don't predict future ones.</p>
+          </fieldset>
+        </form>
+
+        <section class="results-panel">
+          <div class="verdict-card" id="verdict-card">
+            <p class="verdict-headline" id="verdict-headline">—</p>
+            <p class="verdict-detail" id="verdict-detail"></p>
+          </div>
+
+          <div class="numbers-grid" id="numbers-grid"></div>
+
+          <div class="chart-card">
+            <h2>Net worth over time</h2>
+            <div id="chart-container"></div>
+          </div>
+
+          <div class="dashboard-card">
+            <h2>Other considerations</h2>
+            <div id="dashboard-container"></div>
+          </div>
+
+          <details class="methodology">
+            <summary>How this is calculated</summary>
+            <div id="methodology-body"></div>
+          </details>
+        </section>
+      </main>
+    </div>
+    <script type="module" src="/src/main.js"></script>
+  </body>
+</html>
