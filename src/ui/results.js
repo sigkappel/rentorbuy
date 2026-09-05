@@ -1,8 +1,11 @@
 import { formatCurrency, formatSignedCurrency, formatPercent } from "./format.js";
 
-function statCard(label, value, { emphasis = false } = {}) {
+function statCard(label, value, { emphasis = false, kind = null } = {}) {
   const card = document.createElement("div");
-  card.className = emphasis ? "stat-card stat-card--emphasis" : "stat-card";
+  const classes = ["stat-card"];
+  if (emphasis) classes.push("stat-card--emphasis");
+  if (kind) classes.push(`stat-card--${kind}`);
+  card.className = classes.join(" ");
   const labelEl = document.createElement("span");
   labelEl.className = "stat-label";
   labelEl.textContent = label;
@@ -41,33 +44,45 @@ export function renderResults({ buyContext, rentContext, comparison, inputs }) {
   }
 
   gridEl.replaceChildren(
-    statCard("Net worth if you buy", formatCurrency(comparison.finalBuyNetWorth), { emphasis: true }),
-    statCard("Net worth if you rent + invest", formatCurrency(comparison.finalRentNetWorth), { emphasis: true }),
-    statCard("Monthly mortgage payment (P&I)", formatCurrency(buyContext.monthlyPI, { precise: true })),
+    statCard("Net worth if you buy", formatCurrency(comparison.finalBuyNetWorth), { emphasis: true, kind: "buy" }),
+    statCard("Net worth if you rent + invest", formatCurrency(comparison.finalRentNetWorth), {
+      emphasis: true,
+      kind: "rent",
+    }),
+    statCard("Monthly mortgage payment (P&I)", formatCurrency(buyContext.monthlyPI, { precise: true }), {
+      kind: "buy",
+    }),
     ...(buyContext.suiteMonthlyRent > 0
       ? [
-          statCard("Basement suite income ($/mo)", formatCurrency(buyContext.suiteMonthlyRent, { precise: true })),
+          statCard("Basement suite income ($/mo)", formatCurrency(buyContext.suiteMonthlyRent, { precise: true }), {
+            kind: "buy",
+          }),
           statCard(
             "Net owner carrying cost, yr 1 ($/mo)",
-            formatCurrency(buyContext.grossMonthlyOwnerCostYear1 - buyContext.suiteMonthlyRent, { precise: true })
+            formatCurrency(buyContext.grossMonthlyOwnerCostYear1 - buyContext.suiteMonthlyRent, { precise: true }),
+            { kind: "buy" }
           ),
         ]
       : []),
-    statCard("Down payment", formatCurrency(buyContext.downPayment)),
-    statCard("Total closing costs (excl. CMHC)", formatCurrency(buyContext.closing.total)),
+    statCard("Down payment", formatCurrency(buyContext.downPayment), { kind: "buy" }),
+    statCard("Total closing costs (excl. CMHC)", formatCurrency(buyContext.closing.total), { kind: "buy" }),
     statCard(
       "CMHC insurance premium",
-      buyContext.premium > 0 ? formatCurrency(buyContext.premium) : "None (20%+ down)"
+      buyContext.premium > 0 ? formatCurrency(buyContext.premium) : "None (20%+ down)",
+      { kind: "buy" }
     ),
-    statCard("Cash needed to close", formatCurrency(buyContext.upfrontCash)),
-    statCard(`Remaining mortgage balance (yr ${years})`, formatCurrency(buyContext.finalYear.remainingBalance)),
-    statCard(`Total interest paid by yr ${years}`, formatCurrency(buyContext.totalInterestPaid)),
-    statCard(`Home value (yr ${years})`, formatCurrency(buyContext.finalYear.homeValue)),
+    statCard("Cash needed to close", formatCurrency(buyContext.upfrontCash), { kind: "buy" }),
+    statCard(`Remaining mortgage balance (yr ${years})`, formatCurrency(buyContext.finalYear.remainingBalance), {
+      kind: "buy",
+    }),
+    statCard(`Total interest paid by yr ${years}`, formatCurrency(buyContext.totalInterestPaid), { kind: "buy" }),
+    statCard(`Home value (yr ${years})`, formatCurrency(buyContext.finalYear.homeValue), { kind: "buy" }),
     statCard(
       "Buy-side annualized return (IRR)",
-      buyContext.irrAnnualPct != null ? formatPercent(buyContext.irrAnnualPct) : "n/a"
+      buyContext.irrAnnualPct != null ? formatPercent(buyContext.irrAnnualPct) : "n/a",
+      { kind: "buy" }
     ),
-    statCard("Renter's initial lump-sum investment", formatCurrency(rentContext.lumpSum)),
-    statCard("Renter's total amount invested", formatCurrency(rentContext.totalInvested))
+    statCard("Renter's initial lump-sum investment", formatCurrency(rentContext.lumpSum), { kind: "rent" }),
+    statCard("Renter's total amount invested", formatCurrency(rentContext.totalInvested), { kind: "rent" })
   );
 }

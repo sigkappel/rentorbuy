@@ -233,6 +233,14 @@ select:focus {
   background: var(--accent-soft);
 }
 
+.stat-card--buy {
+  border: 1px solid var(--buy-color);
+}
+
+.stat-card--rent {
+  border: 1px solid var(--rent-color);
+}
+
 .stat-label {
   font-size: 0.76rem;
   color: var(--text-muted);
