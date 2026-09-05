@@ -15,6 +15,7 @@ const NUMERIC_FIELDS = [
   "homeInsuranceAnnualCondo",
   "condoFeeMonthly",
   "maintenancePct",
+  "suiteMonthlyRent",
   "yearsToOwn",
   "appreciationPct",
   "monthlyRent",

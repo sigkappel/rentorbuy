@@ -44,6 +44,15 @@ export function renderResults({ buyContext, rentContext, comparison, inputs }) {
     statCard("Net worth if you buy", formatCurrency(comparison.finalBuyNetWorth), { emphasis: true }),
     statCard("Net worth if you rent + invest", formatCurrency(comparison.finalRentNetWorth), { emphasis: true }),
     statCard("Monthly mortgage payment (P&I)", formatCurrency(buyContext.monthlyPI, { precise: true })),
+    ...(buyContext.suiteMonthlyRent > 0
+      ? [
+          statCard("Basement suite income ($/mo)", formatCurrency(buyContext.suiteMonthlyRent, { precise: true })),
+          statCard(
+            "Net owner carrying cost, yr 1 ($/mo)",
+            formatCurrency(buyContext.grossMonthlyOwnerCostYear1 - buyContext.suiteMonthlyRent, { precise: true })
+          ),
+        ]
+      : []),
     statCard("Down payment", formatCurrency(buyContext.downPayment)),
     statCard("Total closing costs (excl. CMHC)", formatCurrency(buyContext.closing.total)),
     statCard(

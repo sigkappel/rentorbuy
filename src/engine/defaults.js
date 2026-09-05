@@ -21,6 +21,7 @@ export const DEFAULT_INPUTS = {
   homeInsuranceAnnualCondo: 600,
   condoFeeMonthly: 400,
   maintenancePct: 1.5, // % of appreciated home value, per year
+  suiteMonthlyRent: 0, // basement suite / mortgage helper income, offsets monthly carrying cost
 
   // Sale assumptions
   yearsToOwn: 7,

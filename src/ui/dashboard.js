@@ -69,6 +69,14 @@ export function renderDashboard(container, { inputs, buyContext, rentContext }) 
       "Calgary rental market",
       `Vacancy rates and rent growth vary year to year — check current Calgary rental market data and adjust the rent increase assumption above rather than relying on a fixed figure here.`
     ),
+    ...(inputs.suiteMonthlyRent > 0
+      ? [
+          item(
+            "Mortgage helper income isn't guaranteed",
+            `Your <strong>${formatCurrency(inputs.suiteMonthlyRent, { precise: true })}</strong>/mo suite income is treated as reducing your carrying cost every month with no vacancy or turnover modeled. A vacant suite, a bad tenant, or landlord/tenant-board delays would raise your real monthly cost above what's shown above.`
+          ),
+        ]
+      : []),
   ];
 
   container.replaceChildren(...items);

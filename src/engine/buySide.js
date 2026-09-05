@@ -29,6 +29,7 @@ export function computeBuySide(inputs) {
     homeInsuranceAnnualCondo,
     condoFeeMonthly,
     maintenancePct,
+    suiteMonthlyRent,
     yearsToOwn,
     appreciationPct,
     commissionOverridePct,
@@ -62,7 +63,7 @@ export function computeBuySide(inputs) {
   const yearlyMaintenance = (year) => yearlyHomeValue(year) * (maintenancePct / 100);
 
   /** Total owner carrying cost for the given 1-indexed month (P&I + tax + insurance + maintenance + condo fee). */
-  const monthlyOwnerCost = (monthIndex) => {
+  const grossMonthlyOwnerCost = (monthIndex) => {
     if (monthIndex < 1 || monthIndex > schedule.length) return 0;
     const yearOfMonth = Math.floor((monthIndex - 1) / 12);
     const pi = schedule[monthIndex - 1].payment;
@@ -73,6 +74,12 @@ export function computeBuySide(inputs) {
       yearlyMaintenance(yearOfMonth) / 12 +
       condoFee
     );
+  };
+
+  /** Net owner carrying cost after basement-suite ("mortgage helper") rental income. */
+  const monthlyOwnerCost = (monthIndex) => {
+    if (monthIndex < 1 || monthIndex > schedule.length) return 0;
+    return grossMonthlyOwnerCost(monthIndex) - suiteMonthlyRent;
   };
 
   const upfrontCash = downPayment + closing.total;
@@ -128,6 +135,8 @@ export function computeBuySide(inputs) {
     schedule,
     monthlyPI,
     monthlyOwnerCost,
+    grossMonthlyOwnerCostYear1: grossMonthlyOwnerCost(1),
+    suiteMonthlyRent,
     yearlySeries,
     finalYear,
     totalInterestPaid: cumulativeInterest,

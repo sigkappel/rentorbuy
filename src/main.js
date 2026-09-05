@@ -19,8 +19,10 @@ setupDerivedFieldSync(form, recalc);
 document.getElementById("methodology-body").innerHTML = `
   <p><strong>Buy side:</strong> standard Canadian mortgage math (semi-annually compounded, as required by law) gives your
   monthly payment and amortization schedule. Each year, home value grows by your appreciation assumption, and property
-  tax/maintenance are calculated as a percent of that grown value. "Net worth if you buy" is what you'd walk away with
-  if you sold that year: appreciated value, minus estimated realtor commission, minus your remaining mortgage balance.</p>
+  tax/maintenance are calculated as a percent of that grown value. If you've entered a basement suite / mortgage helper
+  rent, it's subtracted from your monthly carrying cost every month (flat, with no vacancy modeled) before that cost
+  is used anywhere below. "Net worth if you buy" is what you'd walk away with if you sold that year: appreciated
+  value, minus estimated realtor commission, minus your remaining mortgage balance.</p>
   <p><strong>Rent side:</strong> your down payment and all upfront buying costs (closing costs, plus any CMHC premium
   you would have paid) are invested immediately at your chosen rate of return. Then, every month, whichever of
   owning or renting costs less, the person paying less invests the difference at the same rate. When owning happens
